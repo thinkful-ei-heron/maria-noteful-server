@@ -76,8 +76,11 @@ notesRouter
       req.app.get('db'),
       req.params.note_id
     )
-      .then(numRowsAffected => {
-        res.status(204).end()
+      // .then(numRowsAffected => {
+      //   res.status(204).end()
+      // })
+      .then(notes => {
+        res.status(204).json(notes)
       })
       .catch(next)
   })
