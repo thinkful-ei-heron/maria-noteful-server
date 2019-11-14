@@ -58,6 +58,7 @@ notesRouter
       req.params.note_id
     )
       .then(note => {
+        console.log(req.params.note_id, 'sdfdsfds')
         if (!note) {
           return res.status(404).json({
             error: { message: `note doesn't exist` }
@@ -79,8 +80,8 @@ notesRouter
       // .then(numRowsAffected => {
       //   res.status(204).end()
       // })
-      .then(notes => {
-        res.status(204).json(notes)
+      .then(note => {
+        res.status(204).json(note)
       })
       .catch(next)
   })
