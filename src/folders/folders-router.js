@@ -6,7 +6,7 @@ const FoldersRouter = express.Router()
 const jsonParser = express.json()
 
 const serializefolder = folder => ({
-    id: note.id,
+    id: folder.id,
     name: folder.name
 })
 
@@ -47,7 +47,7 @@ FoldersRouter
   })
 
 FoldersRouter
-  .route('/:folder_id')
+  .route('/:folderid')
   .all((req, res, next) => {
     FoldersService.getById(
       req.app.get('db'),
@@ -56,7 +56,7 @@ FoldersRouter
       .then(folder => {
         if (!folder) {
           return res.status(404).json({
-            error: { message: `folder doesn't exist` }
+            error: { message: `Folder doesn't exist` }
           })
         }
         res.folder = folder

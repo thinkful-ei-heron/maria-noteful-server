@@ -24,17 +24,18 @@ notesRouter
       .catch(next)
   })
   .post(jsonParser, (req, res, next) => {
-    const { name, modified, folderid, content } = req.body
-    const newnote = { name, modified, folderid, content }
-    for (const [key, value] of Object.entries(newnote)) {
-      if (value === null && key !== 'modified'){
+
+    const requiredFields = ['name', 'content', 'folderid']
+    const { name, modified, folderid, content } = req.body 
+    console.log(req.body)
+    const newnote = { name, content, folderid };
+    for (const field of requiredFields){
+      if(!(field in req.body)) {
         return res.status(400).json({
-          error: { message: `Missing '${key}' in request body` }
-        })
+          error: { message: `Missing '${field}' in request body` }
+        }) 
       }
     }
-
-
 
     notesService.insertnote(
       req.app.get('db'),
@@ -88,7 +89,7 @@ notesRouter
     if (numberOfValues === 0)
       return res.status(400).json({
         error: {
-          message: `Request body must contain name, modified, folder_id, and content`
+          message: `Request body must contain name, modified, folderid, and content`
         }
       })
 

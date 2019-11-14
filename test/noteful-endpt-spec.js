@@ -4,7 +4,6 @@ const { makeNotesArray} = require('./notes.fixtures');
 const {makeFoldersArray} = require('./folders.fixtures');
 
 
-
 describe('notes Endpoints', function() {
   let db
 
@@ -95,12 +94,21 @@ describe('notes Endpoints', function() {
     })
   })
  //POST: 
-  describe.only(`POST /api/notes`, () => {
+  describe(`POST /api/notes`, () => {
+    const testNotes = makeNotesArray();
+    const testFolders = makeFoldersArray();
+
+    beforeEach('insert notes', () => {
+      return db 
+        .into('folders')
+        .insert(testFolders)
+    })
+
     it(`creates an note, responding with 201 and the new notes`, () => {
       const newnotes = {
         name: 'Test new note',
         content: 'Test new notes content...',
-        folderid: 12
+        folderid: 1
       }
       return supertest(app)
         .post('/api/notes')
@@ -109,8 +117,15 @@ describe('notes Endpoints', function() {
         .expect(res => {
           expect(res.body.name).to.eql(newnotes.name)
           expect(res.body.content).to.eql(newnotes.content)
-          expect(res.body.folderid).to.eql(newnotes.folderid)
+          expect(res.body.folderid).to.eql(newnotes.folderid)          
+          expect(res.body).to.have.property('id')
+          expect(res.headers.location).to.eql(`/api/notes/${res.body.id}`)   
          })
+         .then(res =>
+          supertest(app)
+            .get(`/api/notes/${res.body.id}`)
+            .expect(res.body)
+         )
     })
 
     const requiredFields = ['name', 'content', 'folderid' ];
