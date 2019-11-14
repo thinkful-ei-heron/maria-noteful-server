@@ -72,8 +72,12 @@ FoldersRouter
       req.app.get('db'),
       req.params.folderid
     )
-      .then(numRowsAffected => {
-        res.status(204).end()
+      // .then(numRowsAffected => {
+      //   res.status(204).end()
+      // })
+
+      .then(folder => {
+        res.status(204).json(folder)
       })
       .catch(next)
   })
